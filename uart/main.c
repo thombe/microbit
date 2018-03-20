@@ -1,4 +1,16 @@
 #include "uart.h"
+#include <stdio.h>
+
+ssize_t _write(int fd, const void *buf, size_t count){
+    char * letter = (char *)(buf);
+    for(int i = 0; i < count; i++){
+        uart_send(*letter);
+        letter++;
+    }
+    return count;
+}
+
+
 int main(void)
 {
     uart_init();
