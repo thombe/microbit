@@ -6,6 +6,10 @@ void uart_init() {
     GPIO->OUT = (1 << 24); // kanskje feil med 24 og 25
     GPIO->IN = (1 << 25);
     //Må brukes av registerene.
+    UART->PSELTXD = GPIO->OUT; // evt UART->PSELTXD = 24;
+    UART->PSELRXD = GPIO->IN; // evt UART->PSELTXD = 25;
+
+
     UART->BAUDRATE = 0x00275000;
     UART->PSELCTS = 0xFFFFFFFF;
     UART->PSELRTS = 0xFFFFFFFF;
