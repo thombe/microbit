@@ -48,12 +48,16 @@ typedef struct {
     volatile uint32_t CONFIG;
 }   NRF_UART_REG;
 
+//to control if lcd is on.
+static int lcd = 0;
 
 
 void uart_init();
 void uart_send(char letter);
 char uart_read();
-
-
+void uart_send_letter();
+void uart_listen_letter();
+void turn_off_lcd();
+void turn_on_lcd();
 
 #endif

@@ -48,3 +48,40 @@ char uart_read()
         return '\0';
     }
 }
+
+void uart_send_letter()
+{
+    if (!(GPIO->IN & button_a)) {
+        uart_send('A');
+    }
+    if (!(GPIO->IN & button_b)) {
+        uart_send('B');
+    }
+}
+
+void uart_listen_letter()
+{
+    if (uart_read() != '\0') {
+        if (lcd) {
+            turn_off_lcd();
+        } else {
+            turn_on_lcd();
+        }
+    }
+}
+
+void turn_off_lcd()
+{
+    lcd = 0;
+    GPIO->OUTCLR = (1 << 14);
+    GPIO->OUTCLR = (1 << 13);
+    GPIO->OUTCLR = (1 << 15);
+}
+
+void turn_on_lcd()
+{
+    lcd = 1;
+    GPIO->OUTSET = (1 << 13);
+    GPIO->OUTSET = (1 << 14);
+    GPIO->OUTSET = (1 << 15);
+}
