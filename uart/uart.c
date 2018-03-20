@@ -1,7 +1,8 @@
 #include "uart.h"
 #include "gpio.h"
 
-void uart_init() {
+void uart_init()
+{
     //konfigurere de nødvendige GPIO pinnene.
     GPIO->OUT = (1 << 24); // kanskje feil med 24 og 25
     GPIO->IN = (1 << 25);
@@ -18,7 +19,8 @@ void uart_init() {
     UART->STARTRX = 1;
 }
 
-void uart_send(char letter) {
+void uart_send(char letter)
+{
     //starts UART transmission sequence
     UART->STARTTX = 1;
 
@@ -31,4 +33,18 @@ void uart_send(char letter) {
 
     //Stops the UART transmission
     UART->STOPTX = 1;
+}
+
+char uart_read()
+{
+    //start UART Reception sequence
+    UART->STARTRX = 1;
+
+
+    if (UART->RXDRDY == 1) {
+        UART->RXDRDY = 0;
+        return UART->RXD;
+    } else {
+        return '\0';
+    }
 }
