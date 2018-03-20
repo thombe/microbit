@@ -21,7 +21,7 @@ typedef struct {
     volatile uint32_t NCTS;
     volatile uint32_t RXDRDY;
     volatile uint32_t RESERVED2[4];
-    volatile uint32_t TXRDY;
+    volatile uint32_t TXDRDY;
     volatile uint32_t RESERVED3[1];
     volatile uint32_t ERROR;
     volatile uint32_t RESERVED4[7];
@@ -48,12 +48,16 @@ typedef struct {
     volatile uint32_t CONFIG;
 }   NRF_UART_REG;
 
+//to control if lcd is on.
+static int lcd = 0;
 
 
 void uart_init();
 void uart_send(char letter);
 char uart_read();
-
-
+void uart_send_letter();
+void uart_listen_letter();
+void turn_off_lcd();
+void turn_on_lcd();
 
 #endif
