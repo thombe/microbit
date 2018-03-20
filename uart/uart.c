@@ -15,5 +15,16 @@ void uart_init() {
 }
 
 void uart_send(char letter) {
+    //starts UART transmission sequence
+    UART->STARTTX = 1;
 
+    //Bytes are transmitted by writing to the txd register
+    //Assuming a char is one byte then the TXD is large enough.
+    UART->TXD = letter;
+
+    //The UART sets TXRDY when the byte is transmitted
+    while (UART->TXDRDY != 1);
+
+    //Stops the UART transmission
+    UART->STOPTX = 1;
 }

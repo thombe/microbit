@@ -21,7 +21,7 @@ typedef struct {
     volatile uint32_t NCTS;
     volatile uint32_t RXDRDY;
     volatile uint32_t RESERVED2[4];
-    volatile uint32_t TXRDY;
+    volatile uint32_t TXDRDY;
     volatile uint32_t RESERVED3[1];
     volatile uint32_t ERROR;
     volatile uint32_t RESERVED4[7];
