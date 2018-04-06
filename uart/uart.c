@@ -1,14 +1,26 @@
 #include "uart.h"
 #include "gpio.h"
 
+int button_a = (1 << 17);
+int button_b = (1 << 26);
+int lcd = 0;
+
+
 void uart_init()
 {
     //konfigurere de nødvendige GPIO pinnene.
-    GPIO->OUT = (1 << 24); // kanskje feil med 24 og 25
-    GPIO->IN = (1 << 25);
+//    GPIO->OUT = (1 << 24); // kanskje feil med 24 og 25
+//    GPIO->IN = (1 << 25);
+
+    GPIO->PIN_CNF[25] = 0; // kanskje feil med 24 og 25
+    GPIO->PIN_CNF[24] = 1;
+
     //Må brukes av registerene.
-    UART->PSELTXD = GPIO->OUT; // evt UART->PSELTXD = 24;
-    UART->PSELRXD = GPIO->IN; // evt UART->PSELTXD = 25;
+//    UART->PSELTXD = GPIO->OUT; // evt UART->PSELTXD = 24;
+//    UART->PSELRXD = GPIO->IN; // evt UART->PSELTXD = 25;
+
+    UART->PSELTXD = 24; // evt UART->PSELTXD = 24;
+    UART->PSELRXD = 25; // evt UART->PSELTXD = 25;
 
 
     UART->BAUDRATE = 0x00275000;
@@ -24,6 +36,7 @@ void uart_send(char letter)
     //starts UART transmission sequence
     UART->STARTTX = 1;
 
+    UART->TXDRDY = 0;
     //Bytes are transmitted by writing to the txd register
     //Assuming a char is one byte then the TXD is large enough.
     UART->TXD = letter;
@@ -38,12 +51,14 @@ void uart_send(char letter)
 char uart_read()
 {
     //start UART Reception sequence
-    UART->STARTRX = 1;
 
+    UART->STARTRX = 1;
 
     if (UART->RXDRDY == 1) {
         UART->RXDRDY = 0;
-        return UART->RXD;
+        char c = UART->RXD;
+        UART->STOPRX = 1;
+        return c;
     } else {
         return '\0';
     }
@@ -54,9 +69,11 @@ void uart_send_letter()
     if (!(GPIO->IN & button_a)) {
         uart_send('A');
     }
+
     if (!(GPIO->IN & button_b)) {
         uart_send('B');
     }
+
 }
 
 void uart_listen_letter()

@@ -1,5 +1,6 @@
 #include "uart.h"
 #include <stdio.h>
+#include "gpio.h"
 
 ssize_t _write(int fd, const void *buf, size_t count){
     char * letter = (char *)(buf);
@@ -19,15 +20,17 @@ int main(void)
 		GPIO->OUTCLR = (1 << i);
 	}
 
-    int button_a = (1 << 17);
-	int button_b = (1 << 26);
+  GPIO->PIN_CNF[17] = 0;
+	GPIO->PIN_CNF[26] = 0;
 
 
-    while(1){
-        uart_send_letter();
-
-		sleep = 10000;
-		while(--sleep);
+  while(1){
+      iprintf("Norway has %d counties.\n\r" , 18);
+      uart_listen_letter();
+      uart_send_letter();
+      int sleep = 10000;
+      while(--sleep);
 	}
+
 
 }

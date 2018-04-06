@@ -1,6 +1,6 @@
 
-#ifndef UART
-#define UART
+#ifndef UART_H
+#define UART_H
 
 #include <stdint.h>
 
@@ -49,7 +49,6 @@ typedef struct {
 }   NRF_UART_REG;
 
 //to control if lcd is on.
-static int lcd = 0;
 
 
 void uart_init();
