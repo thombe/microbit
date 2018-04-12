@@ -1,0 +1,38 @@
+Byggeverktøy som brukes for å gjøre store prosjekter mer håndterlige
+make kan bygge hva som helst men må fortelles hva de nskal gjøre på forhård
+veldig allsidig.
+mål : ingredienser
+    oppskrift
+Eksempel
+main.o : main.c constants.h
+    gcc -c main.c -o main.o
+Her er målet å bygge fila main.o men den avhenger av main.c og constants.h
+.PHONY betyr uekte mål
+Nøstede regler etter hverandre
+Variabler
+OBJ = board.o player.o deck.o tiles.o
+capitalism : $(OBJ)
+    gcc -o capitalism $(OBJ)
+rekursive variable og enkle variable. 
+= vs :=
+?= brukes hvis variablen kun setter om den ikke allerede er definert
++= legger til ledd
+!=
+Mulig å bruke "\" for spesielt lange variabellister
+GNU make fordel for C og C++ anta a .o fil avhenger av .c fil med samme navn
+antar også flagget -c brukes for å generere .o filer
+
+ifeq ($(CC), gcc)
+    LIBS = $(GCC_LIBS)
+else ifeq ($(CC), clang)
+    LIBS = $(CLANG_LIBS)
+else
+    LIBS = $(DEFAULT_LIBS)
+endif
+støtter også f.eks ifneq , ifdef , ifndef, 
+
+$@ betyr det samme som målnavnet.
+Variabelen $< vil svare til den første ingrediensen en regel trenger. Variabelen
+$? vil returnere en liste av alle ingredienser som er nyere enn et mål.
+Variabelen $^ er simpelthen alle ingrediensene et mål trenger, hvor duplikater
+er blitt fjernet ($+ tar med duplikater også).
