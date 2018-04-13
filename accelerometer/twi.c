@@ -1,5 +1,6 @@
 #include "twi.h"
 #include "gpio.h"
+#include "uart.h"
 void twi_init() {
 
   //setting up pins for accel
@@ -9,9 +10,9 @@ void twi_init() {
   TWIO->PSELSCL = 0;
   TWIO->PSELSDA = 30;
 
-  TWI0->RXDREADY = 0;
-	TWI0->TXDSENT = 0;
-	TWI0->ERROR = 0;
+  TWIO->RXDREADY = 0;
+	TWIO->TXDSENT = 0;
+	TWIO->ERROR = 0;
 
   //set freq to 100 kbps
   TWIO->FREQUENCY = 0x01980000;
@@ -34,12 +35,13 @@ uint8_t * data_buffer) {
   TWIO->TXD = start_register;
   while (!TWIO->TXDSENT);
 
+  TWIO->TXDSENT = 0;
   TWIO->RXDREADY = 0;
   TWIO->STARTRX = 1;
 
-  for (size_t i = 0; i < registers_to_read-1; i++) {
+  for (int i = 0; i < registers_to_read-1; i++) {
     while(!TWIO->RXDREADY);
-    TWI->RXDREADY = 0;
+    TWIO->RXDREADY = 0;
 
     data_buffer[i] = TWIO->RXD;
   }
@@ -49,7 +51,31 @@ uint8_t * data_buffer) {
   while (!TWIO->RXDREADY);
   data_buffer[registers_to_read-1] = TWIO->RXD;
 
-
+/*
   TWIO->RXDREADY = 0;
   TWIO->STARTRX = 1;
+  */
+}
+
+void twi_multi_write(
+  uint8_t slave_address,
+  uint8_t start_register,
+  int registers_to_read,
+  uint8_t * data_buffer
+  ) {
+    TWIO->ADDRESS = slave_address;
+    TWIO->STARTTX = 1;
+
+    TWIO->TXDSENT = 0;
+    TWIO->TXD = start_register;
+
+    while (!TWIO->TXDSENT);
+
+    for (int n = 0; n < registers_to_read; ++n) {
+      TWIO->TXDSENT = 0;
+      TWIO->TXD = data_buffer[n];
+      while(!TWIO->TXDSENT);
+    }
+
+    TWIO->STOP = 0; //kanskje være 1..
 }

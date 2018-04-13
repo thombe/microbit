@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdlib.h>
 
 #define TWIO ((NRF_TWI_REG*)0x40003000)
 
@@ -37,7 +38,6 @@ typedef struct {
   volatile uint32_t PSELSDA;
   volatile uint32_t RESERVED12[2];
   volatile uint32_t RXD;
-  volatile uint32_t RESERVED13[1];
   volatile uint32_t TXD;
   volatile uint32_t RESERVED14[1];
   volatile uint32_t FREQUENCY;
@@ -54,3 +54,10 @@ void twi_multi_read(
 
 
 void twi_init();
+
+void twi_multi_write(
+  uint8_t slave_address,
+  uint8_t start_register,
+  int registers_to_read,
+  uint8_t * data_buffer
+  );
