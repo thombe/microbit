@@ -23,7 +23,8 @@ int main(){
 	}
 
 	// Configure buttons
-	
+	GPIO->PIN_CNF[17] = 0;
+	GPIO->PIN_CNF[26] = 0;
 
 	int button_a = (1 << 17);
 	int button_b = (1 << 26);
