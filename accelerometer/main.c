@@ -24,17 +24,18 @@ int main(int argc, char const *argv[]) {
 
     int x_acc = data_buffer[0];
     int y_acc = data_buffer[1];
-    int z_acc = data_buffer[2];
+  //  int z_acc = data_buffer[2];
 
     int x_dot = x_acc / 50;
     int y_dot = - y_acc /50;
 
     ubit_led_matrix_light_only_at(x_dot , y_dot);
 
-    int sleep = 100;
+    int sleep = 500000;
     while(--sleep);
+    utility_print(&uart_send , "X: %6d \n\r", x_acc);
 
-    utility_print(&uart_send , "X: %6d Y: %6d Z: %6d\n\r", x_acc, y_acc , z_acc);
+    //utility_print(&uart_send , "X: %6d Y: %6d Z: %6d\n\r", x_acc, y_acc , z_acc);
   }
   free(data_buffer);
   return 0;
